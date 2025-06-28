@@ -1,0 +1,13 @@
+services:
+  database-dev:
+    image: postgres
+    environment:
+      - "POSTGRES_USER=alpha-user"
+      - "POSTGRES_PASSWORD=alpha-user#1234"
+      - "POSTGRES_DB=alpha"
+    ports:
+      - "9998:5432"
+    restart: always
+    healthcheck:
+      # Password not required to test healthcheck https://www.postgresql.org/docs/current/app-pg-isready.html
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]

@@ -1,0 +1,11 @@
+/node_modules
+.DS_Store
+tmp/
+dist/
+build/
+.idea
+.vscode
+src/_Command.txt
+src/_History.txt
+.wwebjs_auth
+.wwebjs_cache
