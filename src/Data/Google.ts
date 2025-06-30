@@ -81,10 +81,13 @@ export async function createAuthenticatedClient(): Promise<OAuth2Client> {
     );
 
     oAuth2Client.on('tokens', async (tokens) => {
-      const tokenR = await fs.readFile(`${Env.googlePath}/token.json`, 'utf-8').then((s) => {
-        const r = parseJsonValue(s);
-        return tokenSchema.safeParse(r._t === 'Ok' ? r.value : {});
-      });
+      const tokenR = await fs
+        .readFile(`${Env.googlePath}/token.json`, 'utf-8')
+        .then((s) => {
+          const r = parseJsonValue(s);
+          return tokenSchema.safeParse(r._t === 'Ok' ? r.value : {});
+        })
+        .catch(() => tokenSchema.safeParse({}));
 
       const mergedTokens = {
         ...(tokenR.success === true ? tokenR.data : {}),

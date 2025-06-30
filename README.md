@@ -35,7 +35,7 @@ Alpha is a personal assistant built with an AI model and the MCP tool.
 
 # 📧 Google Services Setup (Required only if `Env.withGoogle = true`)
 
-1. Create a new project at [Google Cloud Console](https://console.cloud.google.com/auth/clients/).
+1. Create a new project at [Google Cloud Console](https://console.cloud.google.com/auth/clients/). Depend on your requirements, you need to enable Google API service like: Gmail, Calendar,...
 2. Set the redirect URI to `http://localhost`.
 3. Review available Google scopes in `src/Data/Google.ts`.
 4. Download `credentials.json` to `Env.googlePath/credentials.json`.
@@ -66,7 +66,13 @@ Alpha is a personal assistant built with an AI model and the MCP tool.
    npm run api
    ```
 
-4. Interfaces:
+4. Run check ops:
+
+   ```bash
+   npm run check:ops
+   ```
+
+5. Interfaces:
 
    - **Neovim:** Set up manually as per your configuration.
    - **Terminal:**

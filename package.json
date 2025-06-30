@@ -7,7 +7,7 @@
     "sync": "ts-node src/Data/Sync.ts",
     "tsc": "tsc --noEmit",
     "lint": "eslint . --ext .ts",
-    "check": "ts-node ops/check.ts",
+    "check:ops": "ts-node ops/check.ts",
     "db:start": "docker-compose --project-name alpha-db --file ./docker-compose.yml --project-directory . up --detach --build --remove-orphans",
     "db:migrate": "ts-node ./database/migrate.ts",
     "db:rollback": "ts-node ./database/rollback.ts",
