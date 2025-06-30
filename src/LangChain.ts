@@ -1,23 +1,30 @@
 import { ToolCall } from '@langchain/core/dist/messages/tool';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { AIMessage, BaseMessage, isAIMessage, ToolMessage } from '@langchain/core/messages';
-import { DynamicStructuredTool, StructuredToolInterface } from '@langchain/core/tools';
+import type { AIResponse, Tokens } from './Data/AI';
+import type { LCTool } from './Tool/LangChain';
 
 export type QueryParams = {
   messages: BaseMessage[];
-  tools: Array<DynamicStructuredTool | StructuredToolInterface>;
+  tools: Array<LCTool>;
+  calculateTokens: (t: LCTool[], m: BaseMessage[]) => Tokens;
 };
 
-export async function query(model: BaseChatModel, params: QueryParams): Promise<BaseMessage> {
-  const newMessage = await run(model, params);
-  return queryHandler(model, params, newMessage);
+export async function query(
+  model: BaseChatModel,
+  params: QueryParams
+): Promise<AIResponse<BaseMessage>> {
+  const [newMessage, tokens] = await run(model, params);
+  return queryHandler(model, params, newMessage, tokens);
 }
 
 export async function queryHandler(
   model: BaseChatModel,
-  { tools, messages }: QueryParams,
-  newMessage: BaseMessage
-): Promise<BaseMessage> {
+  params: QueryParams,
+  newMessage: BaseMessage,
+  tokens: Tokens
+): Promise<AIResponse<BaseMessage>> {
+  const { tools, messages } = params;
   messages.push(newMessage);
 
   const toolMap = new Map(tools.map((tool) => [tool.name, tool]));
@@ -37,19 +44,33 @@ export async function queryHandler(
       messages.push(new ToolMessage(resultString, toolCall.id));
     }
 
-    const nextMessage = await run(model, { tools, messages });
-    return queryHandler(model, { tools, messages }, nextMessage);
+    const [nextMessage, nextTokens] = await run(model, { ...params, messages });
+    const newTokens = tokens && nextTokens ? tokens + nextTokens : null;
+    return queryHandler(model, { ...params, messages }, nextMessage, newTokens);
   }
 
-  return newMessage;
+  return [newMessage, tokens];
 }
 
-async function run(model: BaseChatModel, params: QueryParams): Promise<BaseMessage> {
-  if (params.tools.length === 0) {
-    return model.invoke(params.messages);
+async function run(model: BaseChatModel, params: QueryParams): Promise<AIResponse<BaseMessage>> {
+  const { calculateTokens, tools, messages } = params;
+
+  const sendTokens = calculateTokens(tools, messages);
+  const newMessage = await run_(model, params);
+  const receiveTokens = calculateTokens([], [newMessage]);
+  const tokens = sendTokens && receiveTokens ? sendTokens + receiveTokens : null;
+
+  return [newMessage, tokens];
+}
+
+async function run_(model: BaseChatModel, params: QueryParams): Promise<BaseMessage> {
+  const { tools, messages } = params;
+
+  if (tools.length === 0) {
+    return model.invoke(messages);
   } else if (model.bindTools) {
-    const bindedModel = model.bindTools(params.tools);
-    return bindedModel.invoke(params.messages, { tool_choice: 'auto' });
+    const bindedModel = model.bindTools(tools);
+    return bindedModel.invoke(messages, { tool_choice: 'auto' });
   } else {
     return new AIMessage(
       'This model does not support tool binding. Please use a model that supports it.'

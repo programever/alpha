@@ -51,7 +51,10 @@ rl.on('line', async (line) => {
   const messages = await conversation
     .addMessage(Msg.createUserMsg(trimmed))
     .then(AI.run)
-    .then(conversation.addMessage);
+    .then(([m, t]) => {
+      conversation.addTokens(t);
+      return conversation.addMessage(m);
+    });
 
   const newMessage = messages.at(-1);
   if (newMessage) {

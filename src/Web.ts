@@ -24,7 +24,10 @@ export default async function handler(req: Request, res: Response): Promise<void
   const messages = await conversation
     .addMessage(Msg.createUserMsg(trimmed))
     .then(AI.run)
-    .then(conversation.addMessage);
+    .then(([m, t]) => {
+      conversation.addTokens(t);
+      return conversation.addMessage(m);
+    });
 
   const newMessage = messages.at(-1);
   if (newMessage == null) return errorRes(res, 'Cannot find your message');

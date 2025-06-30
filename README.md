@@ -1,8 +1,10 @@
 # 🗿 Alpha
 
-**Disclaimer:** Use this project at your own risk. The owner holds no responsibility for any outcomes.
+**Disclaimer:** Use this project at your own risk.
 
 Alpha is a personal assistant built with an AI model and the MCP tool.
+
+> **Note:** Alpha is currently a prototype for personal experimentation. It is not built for public use. Please fork or watch this repo to stay updated.
 
 ## ✨ Features
 
@@ -13,12 +15,10 @@ Alpha is a personal assistant built with an AI model and the MCP tool.
 
 ## 🚧 Roadmap / Next Steps
 
-- Token calculator.
+- Improve user experience while user is waiting for Alpha to response
 - Enable Alpha to perform full database CRUD operations and maintain its own persistent memory.
 - Mobile integration for on-the-go interaction.
 - Expose Alpha as a Remote MCP node for communication with other AI systems.
-
-> **Note:** Alpha is currently a prototype for personal experimentation. It is not built for public use. Please fork or watch this repo to stay updated.
 
 ---
 
@@ -33,7 +33,7 @@ Alpha is a personal assistant built with an AI model and the MCP tool.
 
 ---
 
-# 📧 Google Services Setup (Enable only if `Env.withGoogle = true`)
+# 📧 Google Services Setup (Required only if `Env.withGoogle = true`)
 
 1. Create a new project at [Google Cloud Console](https://console.cloud.google.com/auth/clients/).
 2. Set the redirect URI to `http://localhost`.
@@ -72,7 +72,7 @@ Alpha is a personal assistant built with an AI model and the MCP tool.
    - **Terminal:**
      ```bash
      npm run cli
-     # OR
+     # OR run any where by update your .zshrc with below
      alias alpha="ts-node ~/Workspace/alpha/src/Cli.ts"
      alpha
      ```
@@ -93,6 +93,7 @@ Alpha is a personal assistant built with an AI model and the MCP tool.
   - `summarize`: Summarize conversations.
   - `reader`: Read content from web/news/blogs.
 - Each interface includes task-specific instructions.
+- Required to return number of used tokens, so that, each AI/Framework must provide a function to calculate it. Eg: `src/AI/Alpha.ts` - calculateTokens
 
 ## Messaging Interface: `src/Data/Message.ts`
 

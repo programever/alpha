@@ -25,6 +25,8 @@ import NewsList from './News/List';
 import NewsMark from './News/Mark';
 import NewsMarkAll from './News/MarkAll';
 
+export type LCTool = DynamicStructuredTool | StructuredToolInterface;
+
 // Hack any - Hahahahahhahahahahahaha
 interface ZTool<T extends z.ZodTypeAny = z.ZodTypeAny> {
   name: string;
@@ -42,7 +44,7 @@ function makeTool(tool: ZTool): DynamicStructuredTool {
   });
 }
 
-const gTools: Array<DynamicStructuredTool | StructuredToolInterface> = [
+const gTools: Array<LCTool> = [
   makeTool(GEventCreate),
   makeTool(GEventDelete),
   makeTool(GEventDeleteMultiple),
@@ -61,7 +63,7 @@ const gTools: Array<DynamicStructuredTool | StructuredToolInterface> = [
   makeTool(GMailSend)
 ];
 
-const tools: Array<DynamicStructuredTool | StructuredToolInterface> = [
+const tools: Array<LCTool> = [
   makeTool(Cli),
   makeTool(FetchWebPage),
   makeTool(DisplayDialog),

@@ -48,7 +48,10 @@ async function read(ai: AI, news: News.News): Promise<void> {
     console.info(`❌ Read news error: ${content.error}`);
     return;
   }
-  const response = await ai.reader(instruction, content.value).then(parseJsonValue);
+  const response = await ai.reader(instruction, content.value).then(([m, tokens]) => {
+    console.info(`♻️ Token spend for news: ${tokens}`);
+    return parseJsonValue(m);
+  });
   if (response._t === 'Err') {
     console.info(`❌ Read news error: ${response.error}`);
     return;

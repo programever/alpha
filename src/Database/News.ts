@@ -135,7 +135,6 @@ export async function update(
 }
 
 export async function markRead(id: number): Promise<Result<string, 'Done'>> {
-  console.log('mark read');
   return db
     .updateTable(tableName)
     .set({
@@ -149,7 +148,6 @@ export async function markRead(id: number): Promise<Result<string, 'Done'>> {
 }
 
 export async function markReadAll(): Promise<Result<string, 'Done'>> {
-  console.log('mark read all');
   return db
     .updateTable(tableName)
     .set({

@@ -17,7 +17,10 @@ const env = {
   dbPort: 9998,
   dbUser: 'alpha-user',
   dbPassword: 'alpha-user#1234',
-  dbDB: 'alpha'
+  dbDB: 'alpha',
+  modelKeys: {
+    openAI: process.env.OPENAI_API_KEY
+  }
 };
 
 export default env;
